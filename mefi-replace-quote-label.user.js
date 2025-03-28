@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-28-f
-// @description  Replace the label on the quote button
+// @version      2025-03-28-g
+// @description  MetaFilter: replace the MefiQuote label with an arrow, or a custom label
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
