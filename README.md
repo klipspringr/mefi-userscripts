@@ -2,7 +2,7 @@
 
 ## MeFi replace quote label
 
-[Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js) | [Install from greasyfork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)
+[Install from Greasy Fork (**recommended**, automatic updates)](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label) | [Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)
 
 MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/26605/Better-MetaFiltering-through-scripting) adds a quote button to each comment.
 
