@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-28-e
+// @version      2025-03-28-f
 // @description  Replace the label on the quote button
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -21,8 +21,24 @@ const getSetting = (key, defaultValue) => {
 (async () => {
   if (!/^\/(\d|comments\.mefi)/.test(window.location.pathname)) return;
 
-  const to = getSetting("mefi-replace-quote-label", "↩ ");
-  document
-    .querySelectorAll('a[class="quotebutton"]')
-    .forEach((node) => (node.textContent = to));
+  const to = getSetting("mefi-replace-quote-label", "↩ "); // note space, for aesthetics
+
+  const replaceQuoteLabels = () => {
+    const nodes = document.querySelectorAll('a[class="quotebutton"]');
+    nodes.forEach((node) => (node.textContent = to));
+    console.log(`mefi-replace-quote-label: replaced ${nodes.length} labels`);
+  };
+
+  const newCommentsWrapper = document.getElementById("newcomments");
+  if (newCommentsWrapper) {
+    // MefiQuote listens for the "mefi-comments" event, but:
+    //    (a) my event listener wasn't picking that up, for some reason; and
+    //    (b) there would be timing issues as MefiQuote needs to complete its work first
+    // hence using MutationObserver instead
+    const observer = new MutationObserver(() => replaceQuoteLabels());
+    // listen for "childList" mutations, but not subtree as *we* are mutating that
+    observer.observe(newCommentsWrapper, { childList: true });
+  }
+
+  replaceQuoteLabels();
 })();
