@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-28-g
+// @version      2025-03-28-h
 // @description  MetaFilter: replace the MefiQuote label with an arrow, or a custom label
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -18,7 +18,7 @@ const getSetting = (key, defaultValue) => {
   }
 };
 
-(async () => {
+(() => {
   if (!/^\/(\d|comments\.mefi)/.test(window.location.pathname)) return;
 
   const to = getSetting("mefi-replace-quote-label", "↩ "); // note space, for aesthetics
@@ -26,7 +26,7 @@ const getSetting = (key, defaultValue) => {
   const replaceQuoteLabels = () => {
     const nodes = document.querySelectorAll('a[class="quotebutton"]');
     nodes.forEach((node) => (node.textContent = to));
-    console.log(`mefi-replace-quote-label: replaced ${nodes.length} labels`);
+    console.log(`mefi-replace-quote-label: ${nodes.length} labels to "${to}"`);
   };
 
   const newCommentsWrapper = document.getElementById("newcomments");
