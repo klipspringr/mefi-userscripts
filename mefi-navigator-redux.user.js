@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-29-a
+// @version      2025-03-29-b
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -44,10 +44,11 @@ const processByline = (
     self = null,
     op = null
 ) => {
-    if (firstRun || !bylineNode.hasAttribute("data-mfn-processed")) {
+    // don't mark self or OP more than once
+    if (firstRun || !bylineNode.hasAttribute("data-mfnr-byline")) {
         if (self !== null && user === self) markSelf(bylineNode);
         if (op !== null && user === op) markOP(bylineNode);
-        bylineNode.setAttribute("data-mfn-processed", "");
+        bylineNode.setAttribute("data-mfnr-byline", "");
     }
 
     if (anchors.length <= 1) return;
@@ -58,10 +59,10 @@ const processByline = (
 
     // if not first run, check for existing nav and remove it if exists
     if (!firstRun)
-        bylineNode.parentNode.querySelector("span[data-mfn-nav]")?.remove();
+        bylineNode.parentNode.querySelector("span[data-mfnr-nav]")?.remove();
 
     const navigator = document.createElement("span");
-    navigator.setAttribute("data-mfn-nav", "");
+    navigator.setAttribute("data-mfnr-nav", "");
 
     const navigatorNodes = [" ["];
     if (previous) navigatorNodes.push(createLink("#" + previous, "⮝"));
@@ -86,7 +87,7 @@ const run = (firstRun = false) => {
     const op = postNode.textContent;
 
     // initialise with post
-    const bylines = [[op, "top", 0]];
+    const bylines = [[op, "top"]];
     const mapUsersAnchors = new Map([[op, ["top"]]]);
 
     // comment nodes: smallcopy children of div.comments (works on all subsites, 2025-03-29)
