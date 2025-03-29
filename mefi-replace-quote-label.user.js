@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-28-h
+// @version      2025-03-28-i
 // @description  MetaFilter: nicer MefiQuote buttons
-// @author       Klipspringe
+// @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
 // @match        *://*.metafilter.com/*
@@ -42,7 +42,7 @@ const modifyQuoteButtons = (to) => {
     for (const quoteButtonNode of quoteButtonNodes)
         modifyQuoteButton(quoteButtonNode, to);
 
-    console.debug(
+    console.log(
         "mefi-replace-quote-label",
         quoteButtonNodes.length,
         `"${to}"`,
