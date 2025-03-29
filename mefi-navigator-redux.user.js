@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-29-b
+// @version      2025-03-29-c
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -133,7 +133,7 @@ const run = (firstRun = false) => {
 
     const newCommentsElement = document.getElementById("newcomments");
     if (newCommentsElement) {
-        const observer = new MutationObserver(run);
+        const observer = new MutationObserver(() => run(false));
         observer.observe(newCommentsElement, { childList: true });
     }
 
