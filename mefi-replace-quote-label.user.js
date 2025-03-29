@@ -3,7 +3,7 @@
 // @namespace    https://github.com/klipspringr/mefi-userscripts
 // @version      2025-03-28-h
 // @description  MetaFilter: nicer MefiQuote buttons
-// @author       Klipspringer
+// @author       Klipspringe
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
 // @match        *://*.metafilter.com/*
