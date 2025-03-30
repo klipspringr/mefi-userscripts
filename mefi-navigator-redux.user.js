@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-30-a
+// @version      2025-03-30-b
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -110,6 +110,9 @@ const run = (firstRun = false) => {
         mapUsersAnchors.set(user, anchors.concat(anchor));
     }
 
+    // don't highlight OP on Ask or Projects, as site already does
+    const highlightOP = subsite !== "ask" && subsite !== "projects";
+
     for (const [i, bylineNode] of [postNode, ...commentNodes].entries()) {
         processByline(
             bylineNode,
@@ -118,7 +121,7 @@ const run = (firstRun = false) => {
             mapUsersAnchors.get(bylines[i][0]),
             firstRun,
             self,
-            subsite !== "ask" && i > 0 ? op : null // don't highlight OP on AskMe, as site already does
+            highlightOP && i > 0 ? op : null
         );
     }
 
@@ -126,7 +129,7 @@ const run = (firstRun = false) => {
         "mefi-navigator-redux",
         firstRun ? "first-run" : "new-comments",
         1 + commentNodes.length,
-        performance.now() - start
+        Math.round(performance.now() - start) + "ms"
     );
 };
 
