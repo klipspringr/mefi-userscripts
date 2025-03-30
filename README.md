@@ -2,7 +2,7 @@
 
 ## MeFi Navigator Redux
 
-[Install from Greasy Fork (**recommended**, automatic updates)](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux) | [Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)
+[Install from Greasy Fork](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux) | [Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)
 
 A slimmer, updated version of the [original Mefi Navigator script](https://userscripts-mirror.org/scripts/show/3330).
 
@@ -16,7 +16,7 @@ A slimmer, updated version of the [original Mefi Navigator script](https://users
 
 ## MeFi replace quote label
 
-[Install from Greasy Fork (**recommended**, automatic updates)](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label) | [Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)
+[Install from Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label) | [Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)
 
 MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/26605/Better-MetaFiltering-through-scripting) adds a quote button to each comment. This script:
 

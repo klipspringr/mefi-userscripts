@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-28-i
+// @version      2025-03-28-j
 // @description  MetaFilter: nicer MefiQuote buttons
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
 // @match        *://*.metafilter.com/*
 // @grant        none
+// @downloadURL  https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js
 // ==/UserScript==
 
 const getSetting = (key, defaultValue) => {
