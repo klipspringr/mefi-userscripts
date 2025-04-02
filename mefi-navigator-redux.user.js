@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-03-30-b
+// @version      2025-04-02
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -12,8 +12,11 @@
 // @updateURL    https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js
 // ==/UserScript==
 
-const SELF_HTML =
-    '<span style="padding:0 4px;margin-left:4px;background-color:#C8E0A1;color:#000;font-size:0.8em;border-radius:2px;">me</span>';
+const SVG_UP = `<svg xmlns="http://www.w3.org/2000/svg" hidden viewBox="0 0 100 100"><path id="mfnr-up" fill="currentColor" d="M 0 93.339 L 50 6.661 L 100 93.339 L 50 64.399 L 0 93.339 Z" /></svg>`;
+const SVG_DOWN = `<svg xmlns="http://www.w3.org/2000/svg" hidden viewBox="0 0 100 100"><path id="mfnr-down" fill="currentColor" d="M 100 6.69 L 50 93.31 L 0 6.69 L 50 35.607 L 100 6.69 Z" /></svg>`;
+
+const ATTR_BYLINE = "data-mfnr-byline";
+const ATTR_NAVIGATOR = "data-mfnr-nav";
 
 const getCookie = (key) => {
     const s = RegExp(key + "=([^;]+)").exec(document.cookie);
@@ -21,20 +24,42 @@ const getCookie = (key) => {
     return decodeURIComponent(s[1]);
 };
 
-const createLink = (href, content) => {
-    const a = document.createElement("a");
-    a.setAttribute("href", href);
-    a.textContent = content;
-    return a;
+const markSelf = (targetNode) => {
+    const span = document.createElement("span");
+    span.style["margin-left"] = "4px";
+    span.style["padding"] = "0 4px";
+    span.style["border-radius"] = "2px";
+    span.style["background-color"] = "#C8E0A1";
+    span.style["color"] = "#000";
+    span.style["font-size"] = "0.8em";
+    span.textContent = "me";
+    targetNode.after(span);
 };
-
-const markSelf = (targetNode) =>
-    targetNode.insertAdjacentHTML("afterend", SELF_HTML);
 
 const markOP = (targetNode) => {
     const wrapper = targetNode.parentNode.parentNode;
     wrapper.style["border-left"] = "5px solid #0004"; // 40% black
     wrapper.style["padding-left"] = "10px";
+};
+
+const createLink = (
+    href,
+    svgHref,
+    width = "1em",
+    height = "0.8em",
+    viewBox = "0 0 100 80"
+) => {
+    const a = document.createElement("a");
+    a.setAttribute("href", "#" + href);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+    svg.setAttribute("viewBox", viewBox);
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + svgHref);
+    svg.appendChild(use);
+    a.appendChild(svg);
+    return a;
 };
 
 const processByline = (
@@ -47,10 +72,10 @@ const processByline = (
     op = null
 ) => {
     // don't mark self or OP more than once
-    if (firstRun || !bylineNode.hasAttribute("data-mfnr-byline")) {
+    if (firstRun || !bylineNode.hasAttribute(ATTR_BYLINE)) {
         if (self !== null && user === self) markSelf(bylineNode);
         if (op !== null && user === op) markOP(bylineNode);
-        bylineNode.setAttribute("data-mfnr-byline", "");
+        bylineNode.setAttribute(ATTR_BYLINE, "");
     }
 
     if (anchors.length <= 1) return;
@@ -59,32 +84,37 @@ const processByline = (
     const previous = anchors[i - 1];
     const next = anchors[i + 1];
 
-    // if not first run, check for existing nav and remove it if exists
-    if (!firstRun)
-        bylineNode.parentNode.querySelector("span[data-mfnr-nav]")?.remove();
-
     const navigator = document.createElement("span");
-    navigator.setAttribute("data-mfnr-nav", "");
+    navigator.setAttribute(ATTR_NAVIGATOR, "");
 
-    const navigatorNodes = [" ["];
-    if (previous) navigatorNodes.push(createLink("#" + previous, "⮝"));
-    navigatorNodes.push(anchors.length);
-    if (next) navigatorNodes.push(createLink("#" + next, "⮟"));
-    navigatorNodes.push("]");
+    const nodes = ["["];
+    if (previous) nodes.push(createLink(previous, "mfnr-up"));
+    nodes.push(anchors.length);
+    if (next) nodes.push(createLink(next, "mfnr-down"));
+    nodes.push("]");
 
-    navigator.append(...navigatorNodes);
-    bylineNode.parentNode.append(navigator);
+    navigator.append(...nodes);
+    bylineNode.parentElement.appendChild(navigator);
 };
 
 const run = (firstRun = false) => {
     const start = performance.now();
 
     const subsite = window.location.hostname.split(".")[0];
+    const opHighlight = subsite !== "ask" && subsite !== "projects"; // don't highlight OP on subsites with this built in
     const self = getCookie("USER_NAME");
 
-    // post node: first smallcopy in div.copy (works on all subsites, 2025-03-29)
+    // if not first run, remove any existing navigators (from both post and comments)
+    if (!firstRun) {
+        const existingNavigators = document.querySelectorAll(
+            `div#posts span.smallcopy > span[${ATTR_NAVIGATOR}]`
+        );
+        existingNavigators.forEach((n) => n.remove());
+    }
+
+    // post node (tested on all subsites, 2025-04-02)
     const postNode = document.querySelector(
-        "div.copy > span.smallcopy > a:first-child"
+        "div#posts div.copy > span.smallcopy > a:first-child"
     );
     const op = postNode.textContent;
 
@@ -92,9 +122,9 @@ const run = (firstRun = false) => {
     const bylines = [[op, "top"]];
     const mapUsersAnchors = new Map([[op, ["top"]]]);
 
-    // comment nodes: smallcopy children of div.comments (works on all subsites, 2025-03-29)
+    // comment nodes, excluding live preview (tested on all subsites, 2025-04-02)
     const commentNodes = document.querySelectorAll(
-        "div.comments > span.smallcopy > a:first-child"
+        "div#posts div.comments:not(#commentform *) > span.smallcopy > a:first-child"
     );
 
     for (const node of commentNodes) {
@@ -110,9 +140,6 @@ const run = (firstRun = false) => {
         mapUsersAnchors.set(user, anchors.concat(anchor));
     }
 
-    // don't highlight OP on Ask or Projects, as site already does
-    const highlightOP = subsite !== "ask" && subsite !== "projects";
-
     for (const [i, bylineNode] of [postNode, ...commentNodes].entries()) {
         processByline(
             bylineNode,
@@ -121,7 +148,7 @@ const run = (firstRun = false) => {
             mapUsersAnchors.get(bylines[i][0]),
             firstRun,
             self,
-            highlightOP && i > 0 ? op : null
+            opHighlight && i > 0 ? op : null
         );
     }
 
@@ -135,6 +162,8 @@ const run = (firstRun = false) => {
 
 (() => {
     if (!/^\/(\d|comments\.mefi)/.test(window.location.pathname)) return;
+
+    document.body.insertAdjacentHTML("beforeend", [SVG_UP, SVG_DOWN].join(""));
 
     const newCommentsElement = document.getElementById("newcomments");
     if (newCommentsElement) {
