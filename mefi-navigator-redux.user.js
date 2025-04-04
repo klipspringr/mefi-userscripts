@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-04-02
+// @version      2025-04-04
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -161,7 +161,11 @@ const run = (firstRun = false) => {
 };
 
 (() => {
-    if (!/^\/(\d|comments\.mefi)/.test(window.location.pathname)) return;
+    if (
+        !/^\/(\d|comments\.mefi)/.test(window.location.pathname) ||
+        /rss$/.test(window.location.pathname)
+    )
+        return;
 
     document.body.insertAdjacentHTML("beforeend", [SVG_UP, SVG_DOWN].join(""));
 
