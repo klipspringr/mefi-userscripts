@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-04-04
+// @version      2025-04-10
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -12,8 +12,8 @@
 // @updateURL    https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js
 // ==/UserScript==
 
-const SVG_UP = `<svg xmlns="http://www.w3.org/2000/svg" hidden viewBox="0 0 100 100"><path id="mfnr-up" fill="currentColor" d="M 0 93.339 L 50 6.661 L 100 93.339 L 50 64.399 L 0 93.339 Z" /></svg>`;
-const SVG_DOWN = `<svg xmlns="http://www.w3.org/2000/svg" hidden viewBox="0 0 100 100"><path id="mfnr-down" fill="currentColor" d="M 100 6.69 L 50 93.31 L 0 6.69 L 50 35.607 L 100 6.69 Z" /></svg>`;
+const SVG_UP = `<svg xmlns="http://www.w3.org/2000/svg" hidden style="display:none"><path id="mfnr-up" fill="currentColor" d="M 0 93.339 L 50 6.661 L 100 93.339 L 50 64.399 L 0 93.339 Z" /></svg>`;
+const SVG_DOWN = `<svg xmlns="http://www.w3.org/2000/svg" hidden style="display:none"><path id="mfnr-down" fill="currentColor" d="M 100 6.69 L 50 93.31 L 0 6.69 L 50 35.607 L 100 6.69 Z" /></svg>`;
 
 const ATTR_BYLINE = "data-mfnr-byline";
 const ATTR_NAVIGATOR = "data-mfnr-nav";
@@ -38,23 +38,17 @@ const markSelf = (targetNode) => {
 
 const markOP = (targetNode) => {
     const wrapper = targetNode.parentNode.parentNode;
-    wrapper.style["border-left"] = "5px solid #0004"; // 40% black
+    wrapper.style["border-left"] = "5px solid #0004";
     wrapper.style["padding-left"] = "10px";
 };
 
-const createLink = (
-    href,
-    svgHref,
-    width = "1em",
-    height = "0.8em",
-    viewBox = "0 0 100 80"
-) => {
+const createLink = (href, svgHref) => {
     const a = document.createElement("a");
     a.setAttribute("href", "#" + href);
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", width);
-    svg.setAttribute("height", height);
-    svg.setAttribute("viewBox", viewBox);
+    svg.setAttribute("width", "1em");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("style", "vertical-align: middle; top: -1px;");
     const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
     use.setAttribute("href", "#" + svgHref);
     svg.appendChild(use);
@@ -106,15 +100,15 @@ const run = (firstRun = false) => {
 
     // if not first run, remove any existing navigators (from both post and comments)
     if (!firstRun) {
-        const existingNavigators = document.querySelectorAll(
-            `div#posts span.smallcopy > span[${ATTR_NAVIGATOR}]`
-        );
-        existingNavigators.forEach((n) => n.remove());
+        document
+            .querySelectorAll(`span[${ATTR_NAVIGATOR}]`)
+            .forEach((n) => n.remove());
     }
 
-    // post node (tested on all subsites, 2025-04-02)
+    // post node
+    // tested on all subsites, modern and classic, 2025-04-10
     const postNode = document.querySelector(
-        "div#posts div.copy > span.smallcopy > a:first-child"
+        "div.copy > span.smallcopy > a:first-child"
     );
     const op = postNode.textContent;
 
@@ -122,9 +116,10 @@ const run = (firstRun = false) => {
     const bylines = [[op, "top"]];
     const mapUsersAnchors = new Map([[op, ["top"]]]);
 
-    // comment nodes, excluding live preview (tested on all subsites, 2025-04-02)
+    // comment nodes, excluding live preview
+    // tested on all subsites, modern and classic, 2025-04-10
     const commentNodes = document.querySelectorAll(
-        "div#posts div.comments:not(#commentform *) > span.smallcopy > a:first-child"
+        "div.comments:not(#commentform *) > span.smallcopy > a:first-child"
     );
 
     for (const node of commentNodes) {
