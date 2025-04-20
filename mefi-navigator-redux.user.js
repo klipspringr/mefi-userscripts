@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-04-10
+// @version      2025-04-20
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -91,26 +91,23 @@ const processByline = (
     bylineNode.parentElement.appendChild(navigator);
 };
 
-const run = (firstRun = false) => {
+const run = (subsite, self, firstRun) => {
     const start = performance.now();
 
-    const subsite = window.location.hostname.split(".")[0];
     const opHighlight = subsite !== "ask" && subsite !== "projects"; // don't highlight OP on subsites with this built in
-    const self = getCookie("USER_NAME");
 
     // if not first run, remove any existing navigators (from both post and comments)
-    if (!firstRun) {
+    if (!firstRun)
         document
             .querySelectorAll(`span[${ATTR_NAVIGATOR}]`)
             .forEach((n) => n.remove());
-    }
 
     // post node
     // tested on all subsites, modern and classic, 2025-04-10
     const postNode = document.querySelector(
         "div.copy > span.smallcopy > a:first-child"
     );
-    const op = postNode.textContent;
+    const op = postNode.textContent.trim();
 
     // initialise with post
     const bylines = [[op, "top"]];
@@ -123,7 +120,7 @@ const run = (firstRun = false) => {
     );
 
     for (const node of commentNodes) {
-        const user = node.textContent;
+        const user = node.textContent.trim();
 
         const anchorElement =
             node.parentElement.parentElement.previousElementSibling;
@@ -135,7 +132,7 @@ const run = (firstRun = false) => {
         mapUsersAnchors.set(user, anchors.concat(anchor));
     }
 
-    for (const [i, bylineNode] of [postNode, ...commentNodes].entries()) {
+    for (const [i, bylineNode] of [postNode, ...commentNodes].entries())
         processByline(
             bylineNode,
             bylines[i][0],
@@ -145,7 +142,6 @@ const run = (firstRun = false) => {
             self,
             opHighlight && i > 0 ? op : null
         );
-    }
 
     console.log(
         "mefi-navigator-redux",
@@ -162,13 +158,16 @@ const run = (firstRun = false) => {
     )
         return;
 
-    document.body.insertAdjacentHTML("beforeend", [SVG_UP, SVG_DOWN].join(""));
+    document.body.insertAdjacentHTML("beforeend", SVG_UP + SVG_DOWN);
+
+    const subsite = window.location.hostname.split(".", 1)[0];
+    const self = getCookie("USER_NAME");
 
     const newCommentsElement = document.getElementById("newcomments");
     if (newCommentsElement) {
-        const observer = new MutationObserver(() => run(false));
+        const observer = new MutationObserver(() => run(subsite, self, false));
         observer.observe(newCommentsElement, { childList: true });
     }
 
-    run(true);
+    run(subsite, self, true);
 })();
