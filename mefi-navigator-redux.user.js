@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-04-20
+// @version      2025-05-02
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -15,8 +15,41 @@
 const SVG_UP = `<svg xmlns="http://www.w3.org/2000/svg" hidden style="display:none"><path id="mfnr-up" fill="currentColor" d="M 0 93.339 L 50 6.661 L 100 93.339 L 50 64.399 L 0 93.339 Z" /></svg>`;
 const SVG_DOWN = `<svg xmlns="http://www.w3.org/2000/svg" hidden style="display:none"><path id="mfnr-down" fill="currentColor" d="M 100 6.69 L 50 93.31 L 0 6.69 L 50 35.607 L 100 6.69 Z" /></svg>`;
 
+// CSS notes:
+// - mfnr-op needs to play nicely with .mod in threads where OP is a mod
+// - classic theme has different margins from modern, so we can't change margin-left without knowing what theme we're on
+// - relative positioning seems to work better
+const CLASSES = `<style>
+.mfnr-op {
+    border-left: 5px solid #0004 !important;
+    padding-left: 10px !important;
+    position: relative !important;
+    left: -15px !important;
+}
+@media (max-width: 550px) {
+    .mfnr-op {
+        left: -5px !important;
+    }
+}
+.mfnr-self-badge {
+    background-color: #C8E0A1;
+    border-radius: 2px;
+    color: #000;
+    font-size: 0.8em;
+    margin-left: 4px;
+    padding: 0 4px;
+    cursor: default;
+}
+.mfnr-nav {
+    white-space: nowrap;
+}
+.mfnr-nav svg {
+    vertical-align: middle;
+    top: -1px;
+}
+</style>`;
+
 const ATTR_BYLINE = "data-mfnr-byline";
-const ATTR_NAVIGATOR = "data-mfnr-nav";
 
 const getCookie = (key) => {
     const s = RegExp(key + "=([^;]+)").exec(document.cookie);
@@ -26,21 +59,13 @@ const getCookie = (key) => {
 
 const markSelf = (targetNode) => {
     const span = document.createElement("span");
-    span.style["margin-left"] = "4px";
-    span.style["padding"] = "0 4px";
-    span.style["border-radius"] = "2px";
-    span.style["background-color"] = "#C8E0A1";
-    span.style["color"] = "#000";
-    span.style["font-size"] = "0.8em";
+    span.classList.add("mfnr-self-badge");
     span.textContent = "me";
     targetNode.after(span);
 };
 
-const markOP = (targetNode) => {
-    const wrapper = targetNode.parentNode.parentNode;
-    wrapper.style["border-left"] = "5px solid #0004";
-    wrapper.style["padding-left"] = "10px";
-};
+const markOP = (targetNode) =>
+    targetNode.parentElement.parentElement.classList.add("mfnr-op");
 
 const createLink = (href, svgHref) => {
     const a = document.createElement("a");
@@ -48,7 +73,7 @@ const createLink = (href, svgHref) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "1em");
     svg.setAttribute("viewBox", "0 0 100 100");
-    svg.setAttribute("style", "vertical-align: middle; top: -1px;");
+    svg.setAttribute("class", "mfnr-nav");
     const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
     use.setAttribute("href", "#" + svgHref);
     svg.appendChild(use);
@@ -79,7 +104,7 @@ const processByline = (
     const next = anchors[i + 1];
 
     const navigator = document.createElement("span");
-    navigator.setAttribute(ATTR_NAVIGATOR, "");
+    navigator.setAttribute("class", "mfnr-nav");
 
     const nodes = ["["];
     if (previous) nodes.push(createLink(previous, "mfnr-up"));
@@ -98,9 +123,7 @@ const run = (subsite, self, firstRun) => {
 
     // if not first run, remove any existing navigators (from both post and comments)
     if (!firstRun)
-        document
-            .querySelectorAll(`span[${ATTR_NAVIGATOR}]`)
-            .forEach((n) => n.remove());
+        document.querySelectorAll("span.mfnr-nav").forEach((n) => n.remove());
 
     // post node
     // tested on all subsites, modern and classic, 2025-04-10
@@ -159,6 +182,7 @@ const run = (subsite, self, firstRun) => {
         return;
 
     document.body.insertAdjacentHTML("beforeend", SVG_UP + SVG_DOWN);
+    document.body.insertAdjacentHTML("beforeend", CLASSES);
 
     const subsite = window.location.hostname.split(".", 1)[0];
     const self = getCookie("USER_NAME");
