@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi replace quote label
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-04-10
+// @version      2025-05-05
 // @description  MetaFilter: nicer MefiQuote buttons
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts

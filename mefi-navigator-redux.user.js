@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-05-02
+// @version      2025-05-05
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
