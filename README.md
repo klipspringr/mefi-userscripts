@@ -1,8 +1,10 @@
 # MetaFilter user scripts
 
+This is a collection of userscripts which improve the MeFi experience. [What is a userscript and how do I install one?](https://greasyfork.org/en/help/installing-user-scripts)
+
 ## MeFi Navigator Redux
 
-**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)**
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux)
 
 An updated, slimmer version of the [original Mefi Navigator script](https://userscripts-mirror.org/scripts/show/3330).
 
@@ -16,9 +18,9 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## MeFi Domain Labels
 
-**[Install from Greasy Fork](https://greasyfork.org/en/scripts/545798-mefi-domain-labels)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)**
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/545798-mefi-domain-labels)
 
-- **Label domains in post links.** No mystery meat here!
+- **Label domains in post links.** No mystery meat here! 🥩
 
 - **Choose domains to highlight in red.**
   - Tap `Edit highlighted domains` in userscript settings and enter a comma-separated list of domains.
@@ -28,7 +30,7 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## MeFi replace quote label
 
-**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)**
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)
 
 MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/26605/Better-MetaFiltering-through-scripting) adds a quote button to each comment.
 
