@@ -2,7 +2,7 @@
 
 ## MeFi Navigator Redux
 
-**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux)** | **[Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)**
+**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531257-mefi-navigator-redux)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-navigator-redux.user.js)**
 
 An updated, slimmer version of the [original Mefi Navigator script](https://userscripts-mirror.org/scripts/show/3330).
 
@@ -14,9 +14,17 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ![MeFi Navigator Redux](assets/mefi-navigator-redux.png)
 
+## MeFi Domain Labels
+
+**[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)**
+
+- **Label domains in post links.** No mystery meat here!
+
+![MeFi Domain Labels](assets/mefi-domain-labels.png)
+
 ## MeFi replace quote label
 
-**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)** | **[Install from github](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)**
+**[Install from Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)**
 
 MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/26605/Better-MetaFiltering-through-scripting) adds a quote button to each comment.
 
