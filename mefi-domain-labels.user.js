@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-c
+// @version      2025-08-14-d
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -25,6 +25,8 @@
 
     const KEY_DOMAINS_HIGHLIGHT = "domains-highlight";
 
+    const INTERNAL_LABEL_TEXT = "MeFi";
+
     const LABEL_CLASS = "mfdl-label";
     const HIGHLIGHT_CLASS = "mfdl-highlight";
 
@@ -36,7 +38,7 @@
             font-size: 80%;
             font-weight: normal;
             margin-left: 4px;
-            padding: 0.1em 0.3em;
+            padding: 1px 4px;
             user-select: none;
             white-space: nowrap;
         }
@@ -48,8 +50,7 @@
             color: rgba(255, 255, 255, 1);
         }`;
 
-    const INTERNAL_LABEL_TEXT = "MeFi";
-
+    // common patterns for multi-level TLDs like .co.uk, .com.au, etc.
     const COMPLEX_TLDS = /\.(co|com|net|org|gov|edu|ac|mil)\.[a-z]{2}$/i;
 
     const getDomain = (href) => {
@@ -62,7 +63,6 @@
             return;
         }
 
-        // Common patterns for multi-level TLDs like .co.uk, .com.au, etc.
         const parts = hostname.split(".");
 
         if (COMPLEX_TLDS.test(hostname)) {
@@ -74,21 +74,22 @@
 
     const getHighlightDomains = async () => {
         const value = await GM_getValue(KEY_DOMAINS_HIGHLIGHT, "");
-        return new Set(value.split(",").map((d) => d.trim().toLowerCase()));
+        if (typeof value !== "string") return [];
+        return value.split(",").map((d) => d.trim().toLowerCase());
     };
 
     const handleEditHighlightDomains = async () => {
         const existing = await GM_getValue(KEY_DOMAINS_HIGHLIGHT, "");
         const edited = prompt(
             "Domains to highlight in red (comma-separated list):",
-            existing || ""
+            String(existing)
         );
         await GM_setValue(KEY_DOMAINS_HIGHLIGHT, edited || "");
-        addLabels();
+        addDomainLabels();
     };
 
-    const addLabels = async () => {
-        // remove existing elements
+    const addDomainLabels = async () => {
+        // remove any existing labels, e.g. after changing highlight domains
         document
             .querySelectorAll(`a > span.${LABEL_CLASS}`)
             .forEach((e) => e.remove());
@@ -103,10 +104,9 @@
 
                 const tag = document.createElement("span");
 
-                const classes = [LABEL_CLASS];
-                if (highlightDomains.has(domain)) classes.push(HIGHLIGHT_CLASS);
-
-                tag.setAttribute("class", classes.join(" "));
+                tag.classList.add(LABEL_CLASS);
+                if (highlightDomains.includes(domain))
+                    tag.classList.add(HIGHLIGHT_CLASS);
 
                 tag.textContent =
                     domain === "metafilter.com" ? INTERNAL_LABEL_TEXT : domain;
@@ -125,7 +125,7 @@
     document.body.insertAdjacentElement("beforeend", styleElement);
 
     const start = performance.now();
-    addLabels();
+    addDomainLabels();
     console.log(
         "mefi-domain-labels",
         Math.round(performance.now() - start) + "ms"
