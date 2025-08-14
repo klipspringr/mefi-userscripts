@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-d
+// @version      2025-08-14-e
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -35,19 +35,20 @@
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             color:rgba(255, 255, 255, 0.8);
-            font-size: 80%;
+            font-size: 75%;
             font-weight: normal;
             margin-left: 4px;
-            padding: 1px 4px;
+            padding: 1px 5px 2px 5px;
             user-select: none;
+            transition: color 100ms;
             white-space: nowrap;
         }
         a > span.${LABEL_CLASS}.${HIGHLIGHT_CLASS} {
             background-color: rgba(255, 0, 0, 0.4);
-            color:rgba(255, 255, 255, 1);
+            color:rgb(255, 255, 255);
         }
         a:hover > span.${LABEL_CLASS} {
-            color: rgba(255, 255, 255, 1);
+            color: rgb(255, 255, 255);
         }`;
 
     // common patterns for multi-level TLDs like .co.uk, .com.au, etc.
