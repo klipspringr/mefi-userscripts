@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-a
+// @version      2025-08-14-b
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -21,24 +21,25 @@
     )
         return;
 
-    const LABEL_CLASS = `mfdl-label`;
+    const LABEL_CLASS = "mfdl-label";
 
     const LABEL_CSS = `
         a > span.${LABEL_CLASS} { 
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 5px;
-            color: #FFF;
+            color:rgba(255, 255, 255, 0.8);
             font-size: 80%;
             font-weight: normal;
             margin-left: 4px;
-            opacity: 0.7;
             padding: 0.1em 0.3em;
             user-select: none;
             white-space: nowrap;
         }
         a:hover > span.${LABEL_CLASS} {
-            opacity: 1;
+            color: rgba(255, 255, 255, 1);
         }`;
+
+    const INTERNAL_LABEL_TEXT = "MeFi";
 
     const COMPLEX_TLDS = /\.(co|com|net|org|gov|edu|ac|mil)\.[a-z]{2}$/i;
 
@@ -74,7 +75,8 @@
 
             const tag = document.createElement("span");
             tag.setAttribute("class", LABEL_CLASS);
-            tag.textContent = domain;
+            tag.textContent =
+                domain === "metafilter.com" ? INTERNAL_LABEL_TEXT : domain;
 
             a.insertAdjacentElement("beforeend", tag);
         });
