@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-f
+// @version      2025-08-15-a
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -98,7 +98,7 @@
         const highlightDomains = await getHighlightDomains();
 
         document
-            .querySelectorAll("div.copy a:not(.smallcopy *)")
+            .querySelectorAll("div.copy:not(.recently) a:not(.smallcopy *)")
             .forEach((a) => {
                 const domain = getDomain(a.getAttribute("href"));
                 if (!domain) return;
