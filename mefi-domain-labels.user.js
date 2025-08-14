@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-12
+// @version      2025-08-14-a
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -24,7 +24,7 @@
     const LABEL_CLASS = `mfdl-label`;
 
     const LABEL_CSS = `
-        .${LABEL_CLASS} { 
+        a > span.${LABEL_CLASS} { 
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             color: #FFF;
@@ -36,7 +36,7 @@
             user-select: none;
             white-space: nowrap;
         }
-        .${LABEL_CLASS}:hover {
+        a:hover > span.${LABEL_CLASS} {
             opacity: 1;
         }`;
 
