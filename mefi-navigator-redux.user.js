@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-a
+// @version      2025-08-14-b
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -41,14 +41,13 @@
                 left: -5px !important;
             }
         }
-        .mfnr-self-badge {
+        .mfnr-me {
             background-color: #C8E0A1;
             border-radius: 2px;
-            color: #000;
+            color: #223C23;
             font-size: 0.8em;
             margin-left: 4px;
             padding: 0 4px;
-            cursor: default;
         }
         .mfnr-nav {
             white-space: nowrap;
@@ -59,27 +58,27 @@
         }
         </style>`;
 
-    const ATTR_BYLINE = "data-mfnr-byline";
-
     const getCookie = (key) => {
         const s = RegExp(key + "=([^;]+)").exec(document.cookie);
         if (!s || !s[1]) return null;
         return decodeURIComponent(s[1]);
     };
 
-    const markSelf = (targetNode) => {
+    const markCommentByMe = (targetNode) => {
+        // check we haven't added a badge already
+        if (targetNode.querySelector("span.mfnr-me")) return;
+
         const span = document.createElement("span");
-        span.classList.add("mfnr-self-badge");
+        span.classList.add("mfnr-me");
         span.textContent = "me";
-        targetNode.after(span);
+        targetNode.appendChild(span);
     };
 
-    const markOP = (targetNode) =>
+    const markCommentByPoster = (targetNode) =>
         targetNode.parentElement.parentElement.classList.add("mfnr-op");
 
-    const createLink = (href, svgHref) => {
+    const createNavigateLink = (svgHref) => {
         const a = document.createElement("a");
-        a.setAttribute("href", "#" + href);
         const svg = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "svg"
@@ -97,92 +96,99 @@
         return a;
     };
 
-    const processByline = (
-        bylineNode,
-        user,
-        anchor,
-        anchors,
-        firstRun,
-        self = null,
-        op = null
-    ) => {
-        // don't mark self or OP more than once
-        if (firstRun || !bylineNode.hasAttribute(ATTR_BYLINE)) {
-            if (self !== null && user === self) markSelf(bylineNode);
-            if (op !== null && user === op) markOP(bylineNode);
-            bylineNode.setAttribute(ATTR_BYLINE, "");
-        }
-
-        if (anchors.length <= 1) return;
-
-        const i = anchors.indexOf(anchor);
-        const previous = anchors[i - 1];
-        const next = anchors[i + 1];
-
-        const navigator = document.createElement("span");
-        navigator.setAttribute("class", "mfnr-nav");
-
-        const nodes = ["["];
-        if (previous) nodes.push(createLink(previous, "mfnr-up"));
-        nodes.push(anchors.length);
-        if (next) nodes.push(createLink(next, "mfnr-down"));
-        nodes.push("]");
-
-        navigator.append(...nodes);
-        bylineNode.parentElement.appendChild(navigator);
-    };
-
-    const run = (subsite, self, firstRun) => {
+    const run = (subsite, me, firstRun) => {
         const start = performance.now();
 
-        const opHighlight = subsite !== "ask" && subsite !== "projects"; // don't highlight OP on subsites with this built in
-
         // if not first run, remove any existing navigators (from both post and comments)
-        if (!firstRun)
+        if (!firstRun) {
             document
                 .querySelectorAll("span.mfnr-nav")
                 .forEach((n) => n.remove());
+        }
 
-        // post node
-        // tested on all subsites, modern and classic, 2025-04-10
+        // get post node
+        // query tested on all subsites, modern and classic, 2025-04-10
         const postNode = document.querySelector(
             "div.copy > span.smallcopy > a:first-child"
         );
-        const op = postNode.textContent.trim();
 
-        // initialise with post
-        const bylines = [[op, "top"]];
-        const mapUsersAnchors = new Map([[op, ["top"]]]);
+        if (!postNode) throw Error("Failed to find postNode");
 
-        // comment nodes, excluding live preview
-        // tested on all subsites, modern and classic, 2025-04-10
+        const poster = postNode.firstChild.textContent.trim();
+
+        // map users to their comments. initialise with the post
+        const mapUsersBylines = new Map([
+            [poster, [{ node: postNode, anchor: "#top" }]],
+        ]);
+
+        // get comment nodes, excluding live preview
+        // query tested on all subsites, modern and classic, 2025-04-10
         const commentNodes = document.querySelectorAll(
             "div.comments:not(#commentform *) > span.smallcopy > a:first-child"
         );
 
-        for (const node of commentNodes) {
-            const user = node.textContent.trim();
+        commentNodes.forEach((node) => {
+            const user = node.firstChild.textContent.trim(); // get firstChild so we ignore any badges, e.g. "me"
 
             const anchorElement =
                 node.parentElement.parentElement.previousElementSibling;
-            const anchor = anchorElement.getAttribute("name");
 
-            bylines.push([user, anchor]);
+            const anchor = "#" + anchorElement.getAttribute("name");
 
-            const anchors = mapUsersAnchors.get(user) ?? [];
-            mapUsersAnchors.set(user, anchors.concat(anchor));
-        }
+            const bylines = mapUsersBylines.get(user);
+            if (bylines) {
+                bylines.push({ node, anchor });
+            } else {
+                mapUsersBylines.set(user, [{ node, anchor }]);
+            }
+        });
 
-        for (const [i, bylineNode] of [postNode, ...commentNodes].entries())
-            processByline(
-                bylineNode,
-                bylines[i][0],
-                bylines[i][1],
-                mapUsersAnchors.get(bylines[i][0]),
-                firstRun,
-                self,
-                opHighlight && i > 0 ? op : null
-            );
+        const navigatePrevious = createNavigateLink("mfnr-up");
+        const navigateNext = createNavigateLink("mfnr-down");
+
+        mapUsersBylines.forEach((bylines, user) => {
+            bylines.forEach(({ node }, i) => {
+                if (i > 0 && me !== null && user === me) markCommentByMe(node);
+
+                // highlight poster comments, unless subsite has this built in
+                if (
+                    i > 0 &&
+                    subsite !== "ask" &&
+                    subsite !== "projects" &&
+                    user === poster
+                )
+                    markCommentByPoster(node);
+
+                if (bylines.length <= 1) return;
+
+                const navigator = document.createElement("span");
+                navigator.setAttribute("class", "mfnr-nav");
+
+                const nodes = ["["];
+
+                const previous = bylines[i - 1]?.anchor;
+                if (previous) {
+                    const clone = navigatePrevious.cloneNode(true);
+                    clone.setAttribute("href", previous);
+                    nodes.push(clone);
+                }
+
+                nodes.push(bylines.length);
+
+                const next = bylines[i + 1]?.anchor;
+                if (next) {
+                    const clone = navigateNext.cloneNode(true);
+                    clone.setAttribute("href", next);
+                    nodes.push(clone);
+                }
+
+                nodes.push("]");
+
+                navigator.append(...nodes);
+
+                node.parentElement.appendChild(navigator);
+            });
+        });
 
         console.log(
             "mefi-navigator-redux",
@@ -196,13 +202,14 @@
     document.body.insertAdjacentHTML("beforeend", CLASSES);
 
     const subsite = window.location.hostname.split(".", 1)[0];
-    const self = getCookie("USER_NAME");
+
+    const me = getCookie("USER_NAME");
 
     const newCommentsElement = document.getElementById("newcomments");
     if (newCommentsElement) {
-        const observer = new MutationObserver(() => run(subsite, self, false));
+        const observer = new MutationObserver(() => run(subsite, me, false));
         observer.observe(newCommentsElement, { childList: true });
     }
 
-    run(subsite, self, true);
+    run(subsite, me, true);
 })();
