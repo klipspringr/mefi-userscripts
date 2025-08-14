@@ -16,7 +16,7 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## MeFi Domain Labels
 
-**[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)**
+**[Install from Greasy Fork](https://greasyfork.org/en/scripts/545798-mefi-domain-labels)** | **[Install from GitHub](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)**
 
 - **Label domains in post links.** No mystery meat here!
 
