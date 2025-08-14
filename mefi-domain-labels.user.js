@@ -35,7 +35,7 @@
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             color:rgba(255, 255, 255, 0.8);
-            font-size: 75%;
+            font-size: 80%;
             font-weight: normal;
             margin-left: 4px;
             padding: 1px 5px 2px 5px;
