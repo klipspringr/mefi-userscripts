@@ -28,7 +28,7 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ![MeFi Domain Labels](assets/mefi-domain-labels.png)
 
-## MeFi replace quote label
+## MeFi Neater Bylines
 
 **[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-replace-quote-label.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/531115-mefi-replace-quote-label)
 
@@ -36,9 +36,9 @@ MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/
 
 - This script **neatens up the comment byline** by replacing "quote" with a reply arrow, and moving it to between + and ⚑.
 
-- For a **custom label**, use your browser's developer tools to set the Local Storage key `mefi-replace-quote-label` to the desired string.
+- For a **custom quote button label**, tap `Edit quote button` in userscripts and enter a label.
 
-![MeFi replace quote label example](assets/mefi-replace-quote-label.png)
+![MeFi Neater Bylines example](assets/mefi-neater-bylines.png)
 
 ## Notes
 
