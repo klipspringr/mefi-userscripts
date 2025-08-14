@@ -22,9 +22,9 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 - **Label domains in post links.** No mystery meat here! 🥩
 
-- **Choose domains to highlight in red.**
+- **Highlight certain domains in red.**
   - Tap `Edit highlighted domains` in userscript settings and enter a comma-separated list of domains.
-  - They will be highlighted like `worcesternews.co.uk` is, below.
+  - They will be highlighted &mdash; like `worcesternews.co.uk` is, below.
 
 ![MeFi Domain Labels](assets/mefi-domain-labels.png)
 
@@ -36,7 +36,7 @@ MetaFilter's [built-in MefiQuote functionality](https://metatalk.metafilter.com/
 
 - This script **neatens up the comment byline** by replacing "quote" with a reply arrow, and moving it to between + and ⚑.
 
-- For a **custom quote button label**, tap `Edit quote button` in userscripts and enter a label.
+- For a **custom quote button label**, tap `Edit quote button` in userscript settings and enter a label.
 
 ![MeFi Neater Bylines example](assets/mefi-neater-bylines.png)
 
