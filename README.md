@@ -20,6 +20,10 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 - **Label domains in post links.** No mystery meat here!
 
+- **Choose domains to highlight in red.**
+  - Tap `Edit highlighted domains` in userscript settings and enter a comma-separated list of domains.
+  - They will be highlighted like `worcesternews.co.uk` is, below.
+
 ![MeFi Domain Labels](assets/mefi-domain-labels.png)
 
 ## MeFi replace quote label
