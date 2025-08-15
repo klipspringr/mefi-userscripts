@@ -20,11 +20,11 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 **[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-domain-labels.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/545798-mefi-domain-labels)
 
-- **Label domains in post links.** No mystery meat here! 🥩
+- **Show domains in post links.** No mystery meat here!
 
-- **Highlight certain domains in red.**
-  - Tap `Edit highlighted domains` in userscript settings and enter a comma-separated list of domains.
-  - They will be highlighted &mdash; like `worcesternews.co.uk` is, below.
+- **Highlight chosen domains in red.**
+  - In your userscript extension, tap `Edit highlighted domains` and enter a comma-separated list of domains.
+  - Your picks will be highlighted in red (like `worcesternews.co.uk` in the example below).
 
 ![MeFi Domain Labels](assets/mefi-domain-labels.png)
 
