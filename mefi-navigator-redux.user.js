@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-14-b
+// @version      2025-08-17-a
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -29,7 +29,7 @@
     // - mfnr-op needs to play nicely with .mod in threads where OP is a mod
     // - classic theme has different margins from modern, so we can't change margin-left without knowing what theme we're on
     // - relative positioning seems to work better
-    const CLASSES = `<style>
+    const INJECTED_CSS = `<style>
         .mfnr-op {
             border-left: 5px solid #0004 !important;
             padding-left: 10px !important;
@@ -143,9 +143,6 @@
             }
         });
 
-        const navigatePrevious = createNavigateLink("mfnr-up");
-        const navigateNext = createNavigateLink("mfnr-down");
-
         mapUsersBylines.forEach((bylines, user) => {
             bylines.forEach(({ node }, i) => {
                 if (i > 0 && me !== null && user === me) markCommentByMe(node);
@@ -199,7 +196,10 @@
     };
 
     document.body.insertAdjacentHTML("beforeend", SVG_UP + SVG_DOWN);
-    document.body.insertAdjacentHTML("beforeend", CLASSES);
+    document.body.insertAdjacentHTML("beforeend", INJECTED_CSS);
+
+    const navigatePrevious = createNavigateLink("mfnr-up");
+    const navigateNext = createNavigateLink("mfnr-down");
 
     const subsite = window.location.hostname.split(".", 1)[0];
 
