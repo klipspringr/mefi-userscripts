@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-17-a
+// @version      2025-08-17-b
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -19,7 +19,8 @@
 
     if (
         !/^\/($|\d|comments\.mefi)/.test(window.location.pathname) ||
-        /rss$/.test(window.location.pathname)
+        /rss$/.test(window.location.pathname) ||
+        /^(bestof|faq)\./.test(window.location.hostname)
     )
         return;
 
