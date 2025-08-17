@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-17-b
+// @version      2025-08-17-c
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -17,10 +17,13 @@
 (async () => {
     "use strict";
 
+    const HOSTNAME_EXCLUDE = /^(?:bestof|faq)\./;
+    const PATHNAME_INCLUDE =
+        /^\/(?:$|\d+\/|archived.mefi|comments\.mefi|home|popular\.mefi|tags\/)/;
+
     if (
-        !/^\/($|\d|comments\.mefi)/.test(window.location.pathname) ||
-        /rss$/.test(window.location.pathname) ||
-        /^(bestof|faq)\./.test(window.location.hostname)
+        HOSTNAME_EXCLUDE.test(window.location.hostname) ||
+        !PATHNAME_INCLUDE.test(window.location.pathname)
     )
         return;
 
@@ -91,7 +94,7 @@
     };
 
     const addDomainLabels = async () => {
-        // remove any existing labels, e.g. after changing highlight domains
+        // remove any existing labels
         document
             .querySelectorAll(`a > span.${LABEL_CLASS}`)
             .forEach((e) => e.remove());
@@ -99,7 +102,10 @@
         const highlightDomains = await getHighlightDomains();
 
         document
-            .querySelectorAll("div.copy:not(.recently) a:not(.smallcopy *)")
+            .querySelectorAll(
+                "#posts div.copy:not(.recently) a:not(.smallcopy *), " +
+                    "#popposts div.copy a:not(.smallcopy *)"
+            )
             .forEach((a) => {
                 const domain = getDomain(a.getAttribute("href"));
                 if (!domain) return;
@@ -116,12 +122,11 @@
                 a.insertAdjacentElement("beforeend", tag);
 
                 // remove any stray period after the domain label
-                // in theory textContent includes whitespace. but there was none on the posts I tested
                 const nextSibling = a.nextSibling;
                 if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
                     const text = nextSibling.textContent;
-                    if (text.charCodeAt(0) === 46) {
-                        nextSibling.textContent = text.slice(1);
+                    if (/^\s*\./.test(text)) {
+                        nextSibling.textContent = text.replace(/^\s*\./, "");
                     }
                 }
             });
