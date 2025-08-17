@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-15-a
+// @version      2025-08-15-b
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -32,7 +32,7 @@
 
     const LABEL_CSS = `
         a > span.${LABEL_CLASS} {
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.15);
             border-radius: 5px;
             color:rgba(255, 255, 255, 0.8);
             font-size: 80%;
@@ -113,6 +113,16 @@
                     domain === "metafilter.com" ? INTERNAL_LABEL_TEXT : domain;
 
                 a.insertAdjacentElement("beforeend", tag);
+
+                // remove any stray period after the domain label
+                // in theory textContent includes whitespace. but there was none on the posts I tested
+                const nextSibling = a.nextSibling;
+                if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
+                    const text = nextSibling.textContent;
+                    if (text.charCodeAt(0) === 46) {
+                        nextSibling.textContent = text.slice(1);
+                    }
+                }
             });
     };
 
