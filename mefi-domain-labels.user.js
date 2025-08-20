@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-17-d
+// @version      2025-08-20-a
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -44,6 +44,7 @@
             border-radius: 5px;
             color:rgba(255, 255, 255, 0.8);
             font-size: 80%;
+            font-style: normal;
             font-weight: normal;
             margin-left: 4px;
             padding: 1px 5px 2px 5px;
