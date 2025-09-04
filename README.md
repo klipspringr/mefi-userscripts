@@ -30,7 +30,7 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## MeFi Inline Images
 
-**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-inline-images.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-img-tag)
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-inline-images.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-inline-images)
 
 - **Display images inline in comments**: bring back the Glory Days™ of the IMG tag.
   - When a comment includes a link to an image, display the actual image.
