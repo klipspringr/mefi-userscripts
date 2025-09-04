@@ -30,7 +30,7 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## MeFi IMG Tag
 
-**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-img-tag.user.js)** also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-img-tag)
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-img-tag.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-img-tag)
 
 - **Bring back the image tag.** Restore a key feature from the Glory Days™
   - When a comment includes a link to an image, we'll include the actual image.
