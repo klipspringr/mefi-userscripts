@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MeFi IMG tag
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-09-03-a
-// @description  MetaFilter: restores the glory days of the IMG tag
+// @version      2025-09-03-b
+// @description  MetaFilter: restore the glory days of the IMG tag
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
@@ -14,7 +14,7 @@
 ;(async () => {
     "use strict"
 
-    const IMG_CLASS = "mfit-injected"
+    const IMG_CLASS = "mfit"
 
     if (
         !/^\/(\d|comments\.mefi)/.test(window.location.pathname) ||
