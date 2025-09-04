@@ -28,16 +28,16 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ![MeFi Domain Labels](assets/mefi-domain-labels.png)
 
-## MeFi IMG Tag
+## MeFi Inline Images
 
-**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-img-tag.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-img-tag)
+**[Install](https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-inline-images.user.js)** &middot; also on [Greasy Fork](https://greasyfork.org/en/scripts/548290-mefi-img-tag)
 
-- **Bring back the image tag.** Restore a key feature from the Glory Days™
-  - When a comment includes a link to an image, we'll include the actual image.
+- **Display images inline in comments**: bring back the Glory Days™ of the IMG tag.
+  - When a comment includes a link to an image, display the actual image.
   - Fetches images for urls ending in `.(avif|gif|jpg|jpeg|png|webp)`, and imgur links in the format `https://imgur.com/jGUHs6T`.
   - More url formats may be img-ified in future. Feel free to suggest one.
 
-![MeFi Img Tag](assets/mefi-img-tag.png)
+![MeFi Inline Images](assets/mefi-inline-images.png)
 
 ## MeFi Neater Bylines
 

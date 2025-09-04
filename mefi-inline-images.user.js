@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         MeFi IMG tag
+// @name         MeFi Inline Images
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-09-03-b
-// @description  MetaFilter: restore the glory days of the IMG tag
+// @version      2025-09-03-c
+// @description  MetaFilter: restore the glory days of the IMG tag by inlining images linked in comments
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
 // @license      MIT
 // @match        *://*.metafilter.com/*
-// @downloadURL  https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-img-tag.user.js
-// @updateURL    https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-img-tag.user.js
+// @downloadURL  https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-inline-images.user.js
+// @updateURL    https://raw.githubusercontent.com/klipspringr/mefi-userscripts/main/mefi-inline-images.user.js
 // ==/UserScript==
 
 ;(async () => {
@@ -59,7 +59,7 @@
         })
 
         console.log(
-            "mefi-img-tag",
+            "mefi-inline-images",
             nodes.length,
             Math.round(performance.now() - start) + "ms"
         )
