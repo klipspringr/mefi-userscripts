@@ -51,4 +51,4 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 ## Notes
 
-- I use Chrome on Windows and the Modern Dark theme. I've briefly tested the scripts in other browsers and themes. If something looks skew-whiff, open an issue or [MeMail me](https://www.metafilter.com/user/304523), providing a screenshot if possible.
+- I use [TamperMonkey](https://www.tampermonkey.net/), Chrome, and the Modern Dark theme. I've briefly tested the scripts in other browsers and themes. If something looks skew-whiff, open an issue or [MeMail me](https://www.metafilter.com/user/304523), providing a screenshot if possible.
