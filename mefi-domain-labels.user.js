@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-29-a
+// @version      2025-09-19-a
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -17,10 +17,10 @@
 ;(async () => {
     "use strict"
 
-    const HOSTNAME_EXCLUDE = /^(?:bestof|faq)\./
+    const HOSTNAME_EXCLUDE = /^(?:bestof|chat|faq|labs|stuff)\./
 
     const PATHNAME_INCLUDE =
-        /^\/(?:$|\d+\/|archived.mefi|comments\.mefi|home\/|popular\.mefi|tags\/)/
+        /^\/(?:$|\d+\/|activity\/\d+\/?$|activity\/\d+\/posts\/$|archived.mefi|comments\.mefi|home\/|popular\.mefi|tags\/)/
 
     const PATHNAME_EXCLUDE = /rss$/
 
@@ -109,7 +109,7 @@
         document
             .querySelectorAll(
                 "#posts div.copy:not(.recently) a:not(.smallcopy *), " +
-                    "#popposts div.copy a:not(.smallcopy *)"
+                    "#popposts div.copy:not(#morepostsmsg) a:not(.smallcopy *)"
             )
             .forEach((a) => {
                 const domain = getDomain(a.getAttribute("href"))
