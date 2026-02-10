@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Inline Images
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2026-02-10-a
+// @version      2026-02-10-b
 // @description  MetaFilter: restore the glory days of the IMG tag by inlining images linked in comments
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -17,7 +17,7 @@
     const IMG_CLASS = "mfit"
     const ATTRIBUTE_DONE = "data-mfit"
 
-    const REGEX_IMAGE_PATHS = /\.(apng|avif|bmp|gif|jpg|jpeg|png|svg|webp)$/i
+    const REGEX_IMAGE_PATHS = /\.(apng|avif|bmp|gif|jpeg|jpg|png|svg|webp)$/i
     const REGEX_IMGUR_PATH = /^\/\w+\/?$/
 
     if (

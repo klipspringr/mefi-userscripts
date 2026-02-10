@@ -34,8 +34,8 @@ An updated, slimmer version of the [original Mefi Navigator script](https://user
 
 - **Display images inline in comments**: bring back the Glory Days™ of the IMG tag.
   - When a comment includes a link to an image, display the actual image.
-  - Fetches images for urls ending in `.(avif|gif|jpg|jpeg|png|webp)`, and imgur links in the format `https://imgur.com/jGUHs6T`.
-  - More url formats may be img-ified in future. Feel free to suggest one.
+  - Fetches images for urls ending in `.apng`, `.avif`, `.bmp`, `.gif`, `.jpeg`, `.jpg`, `.png`, `.svg`, or `.webp`, and imgur links in the format `https://imgur.com/jGUHs6T`.
+  - More urls may be img-ified in future. Feel free to suggest one.
 
 ![MeFi Inline Images](assets/mefi-inline-images.png)
 
