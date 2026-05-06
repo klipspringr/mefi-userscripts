@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Domain Labels
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2026-05-03-a
+// @version      2026-05-06-a
 // @description  MetaFilter: label domains in post links. No mystery meat here!
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -17,11 +17,19 @@
 "use strict"
 
 const HOSTNAME_EXCLUDE = /^(?:bestof|chat|faq|labs|stuff)\./
-
-const PATHNAME_INCLUDE =
-    /^\/(?:$|\d+\/|activity\/\d+(?:\/posts)?\/?$|archived.mefi|comments\.mefi|daily\.mefi|home\/|index\.cfm|popular\.mefi|tags\/)/
-
 const PATHNAME_EXCLUDE = /rss$/
+
+const CONFIG = [
+    {
+        path: /^$|\d+\/|activity\/\d+(?:\/posts)?\/?|archived.mefi|comments\.mefi|daily\.mefi|home\/|index\.cfm|tags\//,
+        selector: "#posts div.copy:not(.recently) a:not(.smallcopy *)",
+    },
+    {
+        path: /^popular\.mefi$/,
+        selector: "#popposts div.copy:not(#morepostsmsg) a:not(.smallcopy *)",
+        observeElementIds: ["newposts"],
+    },
+]
 
 const KEY_DOMAINS_HIGHLIGHT = "domains-highlight"
 
@@ -129,7 +137,7 @@ const getHighlightDomains = async () => {
     return value.split(",").map((d) => d.trim().toLowerCase())
 }
 
-const handleEditHighlightDomains = async () => {
+const handleEditHighlightDomains = async (run) => {
     const existing = await GM_getValue(KEY_DOMAINS_HIGHLIGHT, "")
 
     const edited = prompt(
@@ -139,10 +147,10 @@ const handleEditHighlightDomains = async () => {
 
     await GM_setValue(KEY_DOMAINS_HIGHLIGHT, edited || "")
 
-    addDomainLabels()
+    run()
 }
 
-const addDomainLabels = async () => {
+const addDomainLabels = async (selector) => {
     const start = performance.now()
 
     const highlightDomains = await getHighlightDomains()
@@ -154,10 +162,7 @@ const addDomainLabels = async () => {
         element.remove()
     }
 
-    const linkElements = document.querySelectorAll(
-        "#posts div.copy:not(.recently) a:not(.smallcopy *), " +
-            "#popposts div.copy:not(#morepostsmsg) a:not(.smallcopy *)",
-    )
+    const linkElements = document.querySelectorAll(selector)
 
     for (const linkElement of linkElements) {
         const link = processLinkElement(linkElement, highlightDomains)
@@ -189,26 +194,50 @@ const addDomainLabels = async () => {
         "mefi-domain-labels",
         linkElements.length,
         Math.round(performance.now() - start) + "ms",
+        `"${selector}"`,
     )
 }
 
 ;(() => {
+    const path = window.location.pathname.slice(1)
+
     if (
         HOSTNAME_EXCLUDE.test(window.location.hostname) ||
-        !PATHNAME_INCLUDE.test(window.location.pathname) ||
-        PATHNAME_EXCLUDE.test(window.location.pathname)
+        PATHNAME_EXCLUDE.test(path)
     ) {
         return
     }
 
-    GM_registerMenuCommand(
-        "Edit highlighted domains",
-        handleEditHighlightDomains,
+    const config = CONFIG.find((p) => p.path.test(path))
+
+    if (!config) {
+        return
+    }
+
+    const run = () => addDomainLabels(config.selector)
+
+    GM_registerMenuCommand("Edit highlighted domains", () =>
+        handleEditHighlightDomains(run),
     )
+
+    if (config.observeElementIds) {
+        const observer = new MutationObserver(run)
+        for (const id of config.observeElementIds) {
+            const element = document.getElementById(id)
+            if (element) {
+                observer.observe(element, { childList: true })
+            } else {
+                console.warn(
+                    "mefi-domain-labels",
+                    `Element "${id}" not found for observation`,
+                )
+            }
+        }
+    }
 
     const styleElement = document.createElement("style")
     styleElement.textContent = LABEL_CSS
     document.body.insertAdjacentElement("beforeend", styleElement)
 
-    addDomainLabels()
+    run()
 })()
