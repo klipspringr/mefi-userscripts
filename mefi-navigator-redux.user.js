@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MeFi Navigator Redux
 // @namespace    https://github.com/klipspringr/mefi-userscripts
-// @version      2025-08-29-a
+// @version      2026-06-02-a
 // @description  MetaFilter: navigate through users' comments, and highlight comments by OP and yourself
 // @author       Klipspringer
 // @supportURL   https://github.com/klipspringr/mefi-userscripts
@@ -60,13 +60,17 @@
 
     const getCookie = (key) => {
         const s = RegExp(key + "=([^;]+)").exec(document.cookie)
-        if (!s || !s[1]) return null
+        if (!s || !s[1]) {
+            return null
+        }
         return decodeURIComponent(s[1])
     }
 
     const markCommentByMe = (targetNode) => {
         // check we haven't added a badge already
-        if (targetNode.querySelector("span.mfnr-me")) return
+        if (targetNode.querySelector("span.mfnr-me")) {
+            return
+        }
 
         const span = document.createElement("span")
         span.classList.add("mfnr-me")
@@ -81,14 +85,14 @@
         const a = document.createElement("a")
         const svg = document.createElementNS(
             "http://www.w3.org/2000/svg",
-            "svg"
+            "svg",
         )
         svg.setAttribute("width", "1em")
         svg.setAttribute("viewBox", "0 0 100 100")
         svg.setAttribute("class", "mfnr-nav")
         const use = document.createElementNS(
             "http://www.w3.org/2000/svg",
-            "use"
+            "use",
         )
         use.setAttribute("href", "#" + svgHref)
         svg.appendChild(use)
@@ -109,10 +113,12 @@
         // get post node
         // query tested on all subsites, modern and classic, 2025-04-10
         const postNode = document.querySelector(
-            "div.copy > span.smallcopy > a:first-child"
+            "div.copy > span.smallcopy > a:first-child",
         )
 
-        if (!postNode) throw Error("Failed to find postNode")
+        if (!postNode) {
+            throw Error("Failed to find postNode")
+        }
 
         const poster = postNode.firstChild.textContent.trim()
 
@@ -124,7 +130,7 @@
         // get comment nodes, excluding live preview
         // query tested on all subsites, modern and classic, 2025-04-10
         const commentNodes = document.querySelectorAll(
-            "div.comments:not(#commentform *) > span.smallcopy > a:first-child"
+            "div.comments:not(#commentform *) > span.smallcopy > a:first-child",
         )
 
         commentNodes.forEach((node) => {
@@ -145,18 +151,24 @@
 
         mapUsersBylines.forEach((bylines, user) => {
             bylines.forEach(({ node }, i) => {
-                if (i > 0 && me !== null && user === me) markCommentByMe(node)
-
-                // highlight poster comments, unless subsite has this built in
+                // highlight poster's comments
                 if (
-                    i > 0 &&
-                    subsite !== "ask" &&
-                    subsite !== "projects" &&
-                    user === poster
-                )
+                    user === poster &&
+                    i > 0 && // don't highlight the post itself
+                    subsite !== "ask" && // ask has built-in highlights
+                    subsite !== "projects" // so does projects
+                ) {
                     markCommentByPoster(node)
+                }
 
-                if (bylines.length <= 1) return
+                if (me !== null && user === me) {
+                    markCommentByMe(node)
+                }
+
+                // if only one comment (or the post), no need to add navigator nodes
+                if (bylines.length <= 1) {
+                    return
+                }
 
                 const navigator = document.createElement("span")
                 navigator.setAttribute("class", "mfnr-nav")
@@ -191,7 +203,7 @@
             "mefi-navigator-redux",
             firstRun ? "first-run" : "new-comments",
             1 + commentNodes.length,
-            Math.round(performance.now() - start) + "ms"
+            Math.round(performance.now() - start) + "ms",
         )
     }
 
